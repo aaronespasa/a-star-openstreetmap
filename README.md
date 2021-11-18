@@ -34,7 +34,6 @@ Install all the necessary dependencies:
 >>> sudo apt install libcairo2-dev
 >>> sudo apt install libgraphicsmagick1-dev
 >>> sudo apt install libpng-dev
-<<<<<<< HEAD
 ```
 
 All the modules are install inside the folder `thirdparty/`, so go to that directory `cd thirdparty/`.
@@ -128,7 +127,6 @@ And to specify your own map file:
 >>> ./OSM_A_star_search -f ../<your_osm_file.osm>
 ```
 
->>>>>>> 092bdf87c12c91f1d733bf9a19ab18bcac42e62f
 The base files were provided by Udacity but all the A-Star implementation were made by my own.
 
 ## Made with ❤️ and ☕️ by Aarón

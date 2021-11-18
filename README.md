@@ -34,6 +34,7 @@ Install all the necessary dependencies:
 >>> sudo apt install libcairo2-dev
 >>> sudo apt install libgraphicsmagick1-dev
 >>> sudo apt install libpng-dev
+<<<<<<< HEAD
 ```
 
 All the modules are install inside the folder `thirdparty/`, so go to that directory `cd thirdparty/`.
@@ -80,6 +81,54 @@ And to specify your own map file:
 >>> ./OSM_A_star_search -f ../<your_osm_file.osm>
 ```
 
+=======
+```
+
+All the modules are install inside the folder `thirdparty/`, so go to that directory `cd thirdparty/`.
+
+Clone the IO2D package:
+```bash
+>>> git clone --recurse-submodules https://github.com/cpp-io2d/P0267_RefImpl
+>>> cd P0267_RefImpl
+```
+
+Create a folder called `Debug/` and install the IO2D package there using CMake:
+```bash
+>>> mkdir Debug && cd Debug
+>>> cmake --config Debug "-DCMAKE_BUILD_TYPE=Debug" ..
+>>> cmake --build .
+>>> sudo make install
+```
+
+### 3. Build the project
+
+Go to the main folder `a-star-openstreetmap/` (be careful not to be in the folder `thirdparty/`).
+
+Then, create the `build` directory and run `cmake` and `make`:
+
+```bash
+>>> mkdir build && cd build
+>>> cmake ..
+>>> make
+```
+
+You're all set! 🎉
+
+## Run the program
+
+Once you're in the `build/` directory, execute the following command:
+
+```bash
+>>> ./OSM_A_star_search
+```
+
+And to specify your own map file:
+
+```bash
+>>> ./OSM_A_star_search -f ../<your_osm_file.osm>
+```
+
+>>>>>>> 092bdf87c12c91f1d733bf9a19ab18bcac42e62f
 The base files were provided by Udacity but all the A-Star implementation were made by my own.
 
 ## Made with ❤️ and ☕️ by Aarón

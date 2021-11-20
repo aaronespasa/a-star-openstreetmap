@@ -60,7 +60,7 @@ bool compareValuesHandG(RouteModel::Node* const first_node, RouteModel::Node* co
     // It returns true if the first_node has a smaller h and g value. Otherwise, it returns false.
     float first_node_value  = first_node->h_value  + first_node->g_value;  // h1 + g1
     float second_node_value = second_node->h_value + second_node->g_value; // h2 + g2
-    return first_node_value > second_node_value;
+    return first_node_value < second_node_value;
 }
 
 RouteModel::Node *RoutePlanner::NextNode() {
@@ -82,6 +82,12 @@ RouteModel::Node *RoutePlanner::NextNode() {
 
 
 std::vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node *current_node) {
+    /**
+     * Returns a path of nodes that goes from the first node to the end node.
+     * 
+     * Keep in mind that the given node is the final node. Therefore, after
+     * creating the path of nodes we have to reverse it.
+     */
     // Create path_found vector
     distance = 0.0f;
     std::vector<RouteModel::Node> path_found;
@@ -106,16 +112,39 @@ std::vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node 
 }
 
 
-// TODO 7: Write the A* Search algorithm here.
-// Tips:
-// - Use the AddNeighbors method to add all of the neighbors of the current node to the open_list.
-// - Use the NextNode() method to sort the open_list and return the next node.
-// - When the search has reached the end_node, use the ConstructFinalPath method to return the final path that was found.
-// - Store the final path in the m_Model.path attribute before the method exits. This path will then be displayed on the map tile.
-
 void RoutePlanner::AStarSearch() {
+    /**
+     * Implementation of the A* Search algorithm.
+     * 
+     * Add the first node to the open_list. Then, go through all the nodes adding their neighbors and
+     * taking the one with the lowest sum of G + H values until you find the end node. Then, 
+     * return the path from the first node to that end node.
+     */
     RouteModel::Node *current_node = nullptr;
 
-    // TODO: Implement your solution here.
+    // First we have to add the inital node to the open list because it belongs to the path of nodes
+    // and to avoid the open_list from being empty so we can iterate through it.
+    start_node->visited = true;
+    open_list.push_back(start_node);
+
+    // Remember that every time we call NextNode, the first element of the open_list is removed.
+    // Therefore, it will reach a point where there are no more nodes in the open_list. Then, the program has finsihed.
+    while(open_list.size() > 0) {
+        current_node = NextNode();
+
+        // Check if the distance between the current_node and the end_node is 0. In that case,
+        // the path from the first node to the end node is complete and we can create the path.
+        float distance_current_node_and_end_node = current_node->distance(*end_node);
+        if(distance_current_node_and_end_node == 0) {
+            // The final path is stored in the m_Model.path attribute
+            m_Model.path = ConstructFinalPath(current_node);
+            return;
+        }
+        // Otherwise, we have to repeat the loop adding the neighbors of that node until we find
+        // the end node.
+        else {
+            AddNeighbors(current_node);
+        }
+    }
 
 }

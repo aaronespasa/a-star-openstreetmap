@@ -4,6 +4,16 @@
 
 <h1 align="center">Real-word route planning using C++ and OpenStreetMap </h1>
 
+## Zurich Example
+
+Let's assume that you have arrived in Zurich because you have to do an intership on Google (a hypothetical case, of course).
+
+You have been eating in the center of Zurich, but you still don't know how to get to Google. Like any other person, you could open Google maps and search for it. However, you know a more interesting way to do it:
+
+You declare that Google is at the coordinates (20, 35) of your map and you go from (200, 60). And, simply using a map that you downloaded from [OpenStreetMap](https://www.openstreetmap.org/search?query=zurich#map=15/47.3744/8.5435), you get to Google thanks to this A* search algorithm:
+
+![Zurich Example of A* Search Algorithm](https://github.com/aaronespasa/a-star-openstreetmap/blob/main/images/zurich-a-search.png)
+
 ## Getting Started
 
 > **I encourage you to use Ubuntu and it's crucial to follow the next steps as install the IO2D package can throw many errors!**

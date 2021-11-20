@@ -1,5 +1,5 @@
 #include "route_planner.h"
-#include <algorithm>
+#include <algorithm> // includes std::sort
 
 RoutePlanner::RoutePlanner(RouteModel &model, float start_x, float start_y, float end_x, float end_y): m_Model(model) {
     /**
@@ -62,8 +62,27 @@ void RoutePlanner::AddNeighbors(RouteModel::Node *current_node) {
 // - Remove that node from the open_list.
 // - Return the pointer.
 
-RouteModel::Node *RoutePlanner::NextNode() {
+bool compareValuesHandG(RouteModel::Node* const first_node, RouteModel::Node* const second_node) {
+    // This function is used in the method NextNode to compare the h and g values of two nodes.
+    // It returns true if the first_node has a smaller h and g value. Otherwise, it returns false.
+    return first_node->h_value + first_node->g_value < second_node->h_value + second_node->g_value;
+}
 
+RouteModel::Node *RoutePlanner::NextNode() {
+    /**
+     * NextNode returns a reference to the following node to go by sorting the open_list
+     * and picking the node with the smallest h_value and g_value in that vector.
+     */
+
+    // Sort open_list according to the sum of the h value and g value (see the function compareValuesHandG).
+    std::sort(open_list.begin(), open_list.end(), compareValuesHandG);
+
+    // After sorting, the first element of the open_list is going to be the one with the smallest sum.
+    // Therefore, we're going to create a reference to that node using std::vector::front.
+    RouteModel::Node* first_node = open_list.front();
+    open_list.erase(open_list.begin()); // remove the first element of open_list
+    
+    return first_node;
 }
 
 

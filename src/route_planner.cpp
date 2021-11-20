@@ -58,7 +58,9 @@ void RoutePlanner::AddNeighbors(RouteModel::Node *current_node) {
 bool compareValuesHandG(RouteModel::Node* const first_node, RouteModel::Node* const second_node) {
     // This function is used in the method NextNode to compare the h and g values of two nodes.
     // It returns true if the first_node has a smaller h and g value. Otherwise, it returns false.
-    return first_node->h_value + first_node->g_value < second_node->h_value + second_node->g_value;
+    float first_node_value  = first_node->h_value  + first_node->g_value;  // h1 + g1
+    float second_node_value = second_node->h_value + second_node->g_value; // h2 + g2
+    return first_node_value > second_node_value;
 }
 
 RouteModel::Node *RoutePlanner::NextNode() {
@@ -95,6 +97,9 @@ std::vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node 
     // The first element of the chain (last element of the while loop) won't be added to the
     // path as it has no parent. Therefore, we have to add it after the while loop:
     path_found.push_back(*current_node);
+
+    // The path of nodes goes from the back to the beginning, so we have to reverse the order
+    std::reverse(path_found.begin(), path_found.end());
 
     distance *= m_Model.MetricScale(); // Multiply the distance by the scale of the map to get meters.
     return path_found;

@@ -2,40 +2,56 @@
 #include <algorithm>
 
 RoutePlanner::RoutePlanner(RouteModel &model, float start_x, float start_y, float end_x, float end_y): m_Model(model) {
+    /**
+     * Finds the closest node to the specified initial point (start_x, start_y) and to the ending point (end_x, end_y).
+     * These two values are going to be stored in the two private attributes of RoutePlanner called start_node and
+     * end_node (nodes of type RouteModel::Node).
+     * 
+     * Both the initial point and the ending point must be given as percentages.
+     */
+    
     // Convert inputs to percentage:
     start_x *= 0.01;
     start_y *= 0.01;
     end_x *= 0.01;
     end_y *= 0.01;
 
-    // There are two private attributes called start_node and end_node (nodes of type RouteModel::Node).
-    // These two are going to receive the closest node to the starting and ending points.
-    // We're going to do this by using the following method: 
-    // Node &FindClosestNode(float x, float y);
     start_node = &m_Model.FindClosestNode(start_x, start_y);
     end_node = &m_Model.FindClosestNode(end_x, end_y);
 }
 
 
 float RoutePlanner::CalculateHValue(RouteModel::Node const *node) {
-    // RouteModel::Node have a method called distance(Node other_node) that computes the distance
-    // between the node that is calling the method distance and the node
-    // specified as an argument, returning a float.
-    //
-    // We're using the arrow operator as it dereferences the pointer first
+    /**
+     * Compute the distance from a given node to the end_node.
+     * This is done by using the distance method of RouteModel::Node that returns that distance as a float.
+     */
     return node->distance(*end_node);
 }
 
 
-// TODO 4: Complete the AddNeighbors method to expand the current node by adding all unvisited neighbors to the open list.
-// Tips:
-// - Use the FindNeighbors() method of the current_node to populate current_node.neighbors vector with all the neighbors.
-// - For each node in current_node.neighbors, set the parent, the h_value, the g_value. 
-// - Use CalculateHValue below to implement the h-Value calculation.
-// - For each node in current_node.neighbors, add the neighbor to open_list and set the node's visited attribute to true.
-
 void RoutePlanner::AddNeighbors(RouteModel::Node *current_node) {
+    /**
+     * Populates the neighbors vector of the @current_node by adding all unvisited neighbors.
+     * Then, add every node of current_node.neighbors to the open_list and set the nodes' visited attribute to true
+     * 
+     * Method RouteModel::Node::FindNeighbors stores the neighbors in a vector of nodes' pointers
+     * that is set as a public attribute of RoutePlanner::Node.
+     */
+    current_node->FindNeighbors();
 
+    for(RouteModel::Node* neighbor : current_node->neighbors) {
+        // ** Compute the h_value, parent and g_value of the neighbor ** //
+        neighbor->h_value = CalculateHValue(neighbor);
+        neighbor->parent = current_node;
+        // g_value = sum of the current_node distance + the distance between these two nodes
+        float current_neighbor_distance = current_node->distance(*neighbor);
+        neighbor->g_value = current_node->g_value + current_neighbor_distance;
+
+        // Add every neighbor's node to the RoutePlanner::open_list and set it as visited
+        neighbor->visited = true;
+        open_list.push_back(neighbor);
+    }
 }
 
 
